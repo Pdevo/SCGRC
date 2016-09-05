@@ -28,7 +28,8 @@ N = {}
 O = {}
 P = {}
 G = {}
-V = {}
+B = {}
+D = {}
 
 -- norme
 
@@ -96,6 +97,14 @@ P.bs = 10
 P.bf = 10
 -- binari transito
 P.bt = 10
+-- direttrice est
+P.de = 2
+-- direttrice sud
+P.ds = 2
+-- direttrice ovest
+P.dw = 2
+-- direttrice nord
+P.dn = 2
 
 -- gestioni
 
@@ -128,105 +137,98 @@ G.tm = "ammessa"
 -- transito servizi
 G.ts = "ammessa"
 
--- variabili
+-- binari
 
 -- binari passeggeri
-if P.bp > 0 then
-V.pp,V.up = N.bp+1,N.bp+P.bp
+if P.bp == 0 then
+B.passeggeri = nil
 end
-if P.bp = 0 then
-V.pp,V.up = nil,nil
+if P.bp > 0 then
+B.passeggeri = {}
+B.passeggeri.vn,B.passeggeri.vp,B.passeggeri.bx,B.passeggeri.by = N.bp,P.bp,N.bp+1,N.bp+P.bp
 end
 -- binari merci
-if P.bm > 0 then
-V.pm,V.um = N.bm+1,N.bm+P.bm
+if P.bm == 0 then
+B.merci = nil
 end
-if P.bm = 0 then
-V.pm,V.um = nil,nil
+if P.bm > 0 then
+B.merci = {}
+B.merci.vn,B.merci.vp,B.merci.bx,B.merci.by = N.bm,P.bm,N.bm+1,N.bm+P.bm
 end
 -- binari servizi
-if P.bm > 0 then
-V.ps,V.us = N.bs+1,N.bs+P.bs
+if P.bs == 0 then
+B.servizi = nil
 end
-if P.bm = 0 then
-V.ps,V.us = nil,nil
+if P.bs > 0 then
+B.servizi = {}
+B.servizi.vn,B.servizi.vp,B.servizi.bx,B.servizi.by = N.bs,P.bs,N.bs+1,N.bs+P.bs
 end
 -- binari fermata
-if P.bm > 0 then
-V.pf,V.uf = N.bf+1,N.bf+P.bf
+if P.bf == 0 then
+B.fermata = nil
 end
-if P.bm = 0 then
-V.pf,V.uf = nil,nil
+if P.bf > 0 then
+B.fermata = {}
+B.fermata.vn,B.fermata.vp,B.fermata.bx,B.fermata.by = N.bf,P.bf,N.bf+1,N.bf+P.bf
 end
 -- binari transito
+if P.bt == 0 then
+B.transito = nil
+end
 if P.bt > 0 then
-V.pt,V.ut = N.bt+1,N.bt+P.bt
+B.transito = {}
+B.transito.vn,B.transito.vp,B.transito.bx,B.transito.by = N.bt,P.bt,N.bt+1,N.bt+P.bt
 end
-if P.bt = 0 then
-V.pt,V.ut = nil,nil
+
+-- direttrici
+
+-- direttrice est
+if P.de == 0 then
+D.est = nil
 end
--- circolazione binata
-if G.cb == "ammessa" then
-V.dx,V.dy = N.cx,N.cy
+if P.de == 1 then
+D.est = {}
+D.est.vg,D.est.lv,D.est.lw,D.est.kx,D.est.ky = G.de,N.de,N.dw,N.de*N.cd+N.cz,N.de*N.cd+N.cz
 end
-if G.cb == "vietata" then
-V.dx,V.dy = N.cz,N.cz
+if P.de == 2 then
+D.est = {}
+D.est.vg,D.est.lv,D.est.lw,D.est.kx,D.est.ky = G.de,N.de,N.dw,N.de*N.cd+N.cx,N.de*N.cd+N.cy
 end
--- linea est
-if G.de == "ammessa" then
-V.ve,V.we = N.de,N.dw
+-- direttrice sud
+if P.ds == 0 then
+D.sud = nil
 end
-if G.de == "vietata" then
-V.ve,V.we = nil,nil
+if P.ds == 2 then
+D.sud = {}
+D.sud.vg,D.sud.lv,D.sud.lw,D.sud.kx,D.sud.ky = G.ds,N.ds,N.dn,N.ds*N.cd+N.cz,N.ds*N.cd+N.cz
 end
--- linea sud
-if G.ds == "ammessa" then
-V.vs,V.ws = N.ds,N.dn
+if P.ds == 2 then
+D.sud = {}
+D.sud.vg,D.sud.lv,D.sud.lw,D.sud.kx,D.sud.ky = G.ds,N.ds,N.dn,N.ds*N.cd+N.cx,N.ds*N.cd+N.cy
 end
-if G.de == "vietata" then
-V.vs,V.ws = nil,nil
+-- direttrice ovest
+if P.dw == 0 then
+D.ovest = nil
 end
--- linea ovest
-if G.dw == "ammessa" then
-V.vw,V.ww = N.dw,N.de
+if P.dw == 1  then
+D.ovest = {}
+D.ovest.vg,D.ovest.lv,D.ovest.lw,D.ovest.kx,D.ovest.ky = G.dw,N.dw,N.de,N.dw*N.cd+N.cz,N.dw*N.cd+N.cz
 end
-if G.dw == "vietata" then
-V.vw,V.ww = nil,nil
+if P.dw == 2  then
+D.ovest = {}
+D.ovest.vg,D.ovest.lv,D.ovest.lw,D.ovest.kx,D.ovest.ky = G.dw,N.dw,N.de,N.dw*N.cd+N.cx,N.dw*N.cd+N.cy
 end
--- linea nord
-if G.dn == "ammessa" then
-V.vn,V.wn = N.dn,N.ds
+-- direttrice nord
+if P.dn == 0 then
+D.nord = nil
 end
-if G.dn == "vietata" then
-V.vn,V.wn = nil,nil
+if P.dn == 1 then
+D.nord = {}
+D.nord.vg,D.nord.lv,D.nord.lw,D.nord.kx,D.nord.ky = G.dn,N.dn,N.ds,N.dn*N.cd+N.cz,N.dn*N.cd+N.cz
 end
--- blocco est
-if G.de == "ammessa" then
-V.xe,V.ye = N.de*N.cd+V.dx,N.de*N.cd+V.dy
-end
-if G.de == "vietata" then
-V.xe,V.ye = nil,nil
-end
--- blocco sud
-if G.ds == "ammessa" then
-V.xs,V.ys = N.ds*N.cd+V.dx,N.ds*N.cd+V.dy
-end
-if G.ds == "vietata" then
-V.xs,V.ys = nil,nil
-end
--- blocco ovest
-if G.dw == "ammessa" then
-V.xw,V.yw = N.dw*N.cd+V.dx,N.dw*N.cd+V.dy
-end
-if G.dw == "vietata" then
-V.xw,V.yw = nil,nil
-end
--- blocco nord
-if G.dn == "ammessa" then
-V.xn,V.yn = N.dn*N.cd+V.dx,N.dn*N.cd+V.dy
-end
-if G.dn == "vietata" then
-V.xn,V.yn = nil,nil
+if P.dn == 2 then
+D.nord = {}
+D.nord.vg,D.nord.lv,D.nord.lw,D.nord.kx,D.nord.ky = G.dn,N.dn,N.ds,N.dn*N.cd+N.cx,N.dn*N.cd+N.cy
 end
 
 -- inizializzazione dati
@@ -307,7 +309,8 @@ local id, scgrc = rednet.receive()
     sistema_configura(O,"settaggi","operatori")
     sistema_configura(P,"settaggi","parametri")
     sistema_configura(G,"settaggi","gestioni")
-    sistema_configura(V,"settaggi","variabili")
+    sistema_configura(B,"settaggi","binari")
+	sistema_configura(D,"settaggi","direttrici")
     sistema_configura(I,"dati","itinerari")
 	sistema_configura(E,"dati","elenchi")
     sistema_configura(S,"dati","stati")
